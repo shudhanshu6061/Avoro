@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://avoro.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const res = await fetch(`${API_BASE}/api/seo/sitemap.xml`, { next: { revalidate: 3600 } });
+    const base = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const targetUrl = new URL('api/seo/sitemap.xml', base.endsWith('/') ? base : `${base}/`).toString();
+    const res = await fetch(targetUrl, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('sitemap fetch failed');
     const xml = await res.text();
 

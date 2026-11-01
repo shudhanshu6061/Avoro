@@ -1,10 +1,22 @@
 import type { Product } from '@/types/product';
 import type { JournalArticle, JournalListResponse } from '@/types/article';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+function getTargetUrl(path: string): string {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  if (typeof window === 'undefined') {
+    const base = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    return new URL(cleanPath, base.endsWith('/') ? base : `${base}/`).toString();
+  }
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    const base = process.env.NEXT_PUBLIC_API_URL;
+    return new URL(cleanPath, base.endsWith('/') ? base : `${base}/`).toString();
+  }
+  return path.startsWith('/') ? path : `/${path}`;
+}
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const targetUrl = getTargetUrl(path);
+  const res = await fetch(targetUrl, {
     ...init,
     credentials: 'include',
     headers: {

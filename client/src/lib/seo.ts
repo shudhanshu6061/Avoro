@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://avoro.in';
 
 export interface PageSeoMeta {
@@ -49,12 +48,19 @@ export function parseKeywords(rawKeywords?: string | string[] | null): string[] 
   return undefined;
 }
 
+function getInternalApiUrl(path: string): string {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const base = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  return new URL(cleanPath, base.endsWith('/') ? base : `${base}/`).toString();
+}
+
 /**
  * Fetches page-by-page SEO metadata from the backend API.
  */
 export async function fetchPageSeo(path: string): Promise<PageSeoMeta | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/seo/page-meta?path=${encodeURIComponent(path)}`, {
+    const url = getInternalApiUrl(`api/seo/page-meta?path=${encodeURIComponent(path)}`);
+    const res = await fetch(url, {
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;

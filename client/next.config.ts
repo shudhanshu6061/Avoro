@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const ADMIN = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:5173';
 
 const nextConfig: NextConfig = {

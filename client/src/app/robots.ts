@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
 export default async function robots(): Promise<MetadataRoute.Robots> {
   try {
-    const res = await fetch(`${API_BASE}/api/seo/robots.txt`, { next: { revalidate: 300 } });
+    const base = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const targetUrl = new URL('api/seo/robots.txt', base.endsWith('/') ? base : `${base}/`).toString();
+    const res = await fetch(targetUrl, { next: { revalidate: 300 } });
     if (!res.ok) throw new Error('robots fetch failed');
     const text = await res.text();
 

@@ -1,8 +1,8 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
 export default async function GscVerification() {
   try {
-    const res = await fetch(`${API_BASE}/api/seo/gsc`, { next: { revalidate: 300 } });
+    const base = process.env.SERVER_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const targetUrl = new URL('api/seo/gsc', base.endsWith('/') ? base : `${base}/`).toString();
+    const res = await fetch(targetUrl, { next: { revalidate: 300 } });
     if (!res.ok) return null;
     const data = await res.json();
     const code = data.verificationCode?.trim();
