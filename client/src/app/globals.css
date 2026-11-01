@@ -1,0 +1,891 @@
+/* ─────────────────────────────────────────────────────────────
+   AVORO — Light Luxury Design System
+   Aesthetic: Apple × Aesop × Byredo (Light Edition)
+   ───────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
+@source "../../client/src/**/*.{js,ts,jsx,tsx,mdx}";
+@source "./**/*.{js,ts,jsx,tsx,mdx}";
+@source "../components/**/*.{js,ts,jsx,tsx,mdx}";
+
+:root {
+  /* Surfaces */
+  --bg:           #F8F6F2;
+  --bg-soft:      #F5F0E8;
+  --bg-card:      #FFFFFF;
+  --bg-glass:     rgba(255,255,255,0.72);
+
+  /* Gold / Rose-Gold palette */
+  --gold:         #D4AF88;
+  --gold-dark:    #B8924A;
+  --gold-light:   #E8D5B7;
+  --gold-pale:    rgba(212,175,136,0.15);
+  --rose-gold:    #C9958A;
+
+  /* Text */
+  --text:         #0f0f0f;
+  --text-mid:     #3a3a3a;
+  --text-soft:    #6a6a6a;
+  --text-muted:   #9a9490;
+
+  /* Borders */
+  --border:       rgba(212,175,136,0.22);
+  --border-soft:  rgba(212,175,136,0.12);
+  --border-dark:  rgba(26,26,26,0.1);
+
+  /* Fonts */
+  --font-display: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-ui:      var(--font-inter), 'Inter', system-ui, sans-serif;
+
+  /* Layout */
+  --nav-h:           72px;
+  --announcement-h:  36px;
+  --header-offset:   calc(var(--announcement-h) + var(--nav-h));
+  --page-max:        1400px;
+  --page-pad:        clamp(1.5rem, 5vw, 5rem);
+
+  /* Shadows */
+  --shadow-sm:  0 2px 12px rgba(180,150,120,0.10);
+  --shadow-md:  0 8px 32px rgba(180,150,120,0.14);
+  --shadow-lg:  0 20px 60px rgba(180,150,120,0.18);
+  --shadow-xl:  0 32px 80px rgba(180,150,120,0.22);
+
+  /* Z-index */
+  --z-header: 80;
+  --z-drawer: 200;
+
+  /* Easing */
+  --ease:     cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in:  cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ── Reset ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html, body { max-width: 100vw; overflow-x: hidden; min-height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+button { cursor: pointer; border: none; background: none; font-family: var(--font-ui); }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+input, select, textarea { font-family: var(--font-ui); color: var(--text); outline: none; }
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+::selection { background: var(--gold-pale); }
+
+/* ── Layout helpers ─────────────────────────── */
+.lumina-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-soft); }
+::-webkit-scrollbar-thumb { background: var(--gold-light); border-radius: 2px; }
+
+/* ── Keyframes ──────────────────────────────── */
+@keyframes fadeUp    { from { opacity:0; transform:translateY(32px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+@keyframes float     { 0%,100%{transform:translateY(0px)rotate(0deg);} 33%{transform:translateY(-18px)rotate(1.5deg);} 66%{transform:translateY(-8px)rotate(-1deg);} }
+@keyframes shimmer   { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+@keyframes softPulse { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
+@keyframes slideInRight { from{transform:translateX(100%);} to{transform:translateX(0);} }
+@keyframes scaleIn   { from{opacity:0;transform:scale(0.94);} to{opacity:1;transform:scale(1);} }
+
+/* ── Utility classes ────────────────────────── */
+.lumina-label {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+/* Primary CTA button */
+.lumina-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.25rem;
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--text);
+  border-radius: 2px;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.lumina-btn:hover {
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Ghost/outline button */
+.lumina-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.25rem;
+  background: transparent;
+  color: var(--text-mid);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--border-dark);
+  border-radius: 2px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.lumina-btn-ghost:hover {
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+  transform: translateY(-1px);
+}
+
+/* Gold filled button */
+.lumina-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.25rem;
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(184,146,74,0.30);
+}
+.lumina-btn-gold:hover {
+  box-shadow: 0 8px 32px rgba(184,146,74,0.45);
+  transform: translateY(-2px);
+}
+
+/* Text link */
+.lumina-link {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  border-bottom: 1px solid var(--gold-light);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lumina-link:hover { border-color: var(--gold-dark); }
+
+/* ── Card (product card) ────────────────────── */
+.lumina-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  will-change: transform;
+}
+.lumina-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Glassmorphic element ───────────────────── */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* ── Fade-up animation ──────────────────────── */
+.fade-up { animation: fadeUp 0.75s var(--ease) both; }
+.fade-up-1 { animation: fadeUp 0.75s 0.1s var(--ease) both; }
+.fade-up-2 { animation: fadeUp 0.75s 0.2s var(--ease) both; }
+.fade-up-3 { animation: fadeUp 0.75s 0.3s var(--ease) both; }
+
+/* ── Skeleton loader ────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-soft) 25%, var(--gold-pale) 50%, var(--bg-soft) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  border-radius: 4px;
+}
+
+/* ── Page layout helpers ────────────────────── */
+
+/* Hero 2-col grid */
+.avoro-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.avoro-hero-bottle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+.avoro-parallax-root {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.avoro-parallax-card {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+/* Product / card grids */
+.avoro-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.avoro-scent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.25rem;
+}
+.avoro-journal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* Collection sidebar + grid */
+.avoro-col-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 3rem;
+  align-items: start;
+  padding-block: 3rem;
+}
+
+/* Section vertical spacing */
+.avoro-section { padding-block: clamp(5rem, 10vw, 8rem); }
+.avoro-section-sm { padding-block: clamp(3rem, 6vw, 5rem); }
+
+/* ── Responsive breakpoints ─────────────────── */
+@media (max-width: 1024px) {
+  .avoro-hero-grid { gap: 2rem; }
+}
+@media (max-width: 900px) {
+  .avoro-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  .avoro-hero-bottle {
+    height: clamp(220px, 45vw, 320px);
+  }
+  .avoro-parallax-root,
+  .avoro-parallax-card {
+    max-width: 250px;
+  }
+  .avoro-hero-grid > *:last-child {
+    order: -1;
+  }
+  .avoro-col-layout {
+    grid-template-columns: 1fr;
+  }
+  .avoro-col-sidebar { display: none !important; }
+  .avoro-journal-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .avoro-product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .avoro-scent-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .avoro-journal-grid { grid-template-columns: 1fr; }
+  .avoro-hero-grid { padding-top: 0; padding-bottom: 1rem; }
+}
+@media (max-width: 480px) {
+  .avoro-product-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Hero mobile layout ─────────────────────── */
+@media (max-width: 900px) {
+  .avoro-hero-grid { text-align: center; }
+  .avoro-hero-grid .trust-strip { justify-content: center; }
+}
+
+/* ── Product page split layout ──────────────────────── */
+.prod-layout { display: grid; grid-template-columns: 55% 45%; }
+@media (max-width: 900px) {
+  .prod-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .prod-layout > div:first-child {
+    position: relative !important;
+    top: 0 !important;
+    height: 65vw !important;
+    min-height: 300px;
+    max-height: 500px;
+  }
+}
+
+/* ── Shared responsive grids & stacks ───────────────── */
+.avoro-home-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+}
+
+.avoro-mobile-swipe-hint {
+  display: none;
+}
+
+.avoro-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.avoro-cta-stack {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.avoro-journal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.avoro-newsletter-form {
+  display: flex;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-card);
+  max-width: 460px;
+  margin-inline: auto;
+}
+
+.avoro-checkout-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.avoro-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Product cards: quick-add handling */
+.home-card-mobile-cta {
+  display: none;
+}
+
+.col-product-card .col-card-cta,
+.home-product-card .home-card-cta {
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (max-width: 768px), (hover: none) {
+  .home-product-card .home-card-cta {
+    display: none !important;
+  }
+  .home-card-mobile-cta {
+    display: block !important;
+  }
+}
+
+/* ── Premium Mobile Styles ───────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --nav-h: 56px;
+    /* floating capsule: announcement + 10px gap + 56px nav + 6px buffer */
+    --header-offset: 108px;
+    --page-pad: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* Safe area insets for notched phones */
+  .lumina-container {
+    padding-inline: var(--page-pad);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  body { font-size: 15px; line-height: 1.75; }
+
+  /* Touch targets — scoped, not all links/buttons */
+  .lumina-btn,
+  .lumina-btn-gold,
+  .lumina-btn-ghost,
+  .lum-icon button,
+  .lum-hamburger,
+  .lum-mobile-actions button,
+  header button[aria-label],
+  .avoro-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .lumina-btn,
+  .lumina-btn-gold,
+  .lumina-btn-ghost {
+    min-height: 48px;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* Stack paired CTAs full-width on mobile */
+  .avoro-cta-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+  }
+  .avoro-cta-stack .lumina-btn-gold,
+  .avoro-cta-stack .lumina-btn,
+  .avoro-cta-stack .lumina-btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .avoro-home-product-grid,
+  .avoro-product-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    gap: 1.15rem !important;
+    padding-bottom: 1.25rem !important;
+    padding-top: 0.25rem !important;
+    margin-inline: calc(var(--page-pad) * -1) !important;
+    padding-inline: var(--page-pad) !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .avoro-home-product-grid::-webkit-scrollbar,
+  .avoro-product-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .avoro-home-product-grid > *,
+  .avoro-product-grid > * {
+    flex: 0 0 84% !important;
+    max-width: 320px !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    will-change: transform !important;
+  }
+
+  .avoro-mobile-swipe-hint {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .avoro-form-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .avoro-journal-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    margin-bottom: 2rem !important;
+  }
+  .avoro-journal-header .lumina-btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .avoro-newsletter-form {
+    flex-direction: column !important;
+    border-radius: 8px !important;
+    max-width: 100% !important;
+  }
+  .avoro-newsletter-form input {
+    border-bottom: 1px solid var(--border) !important;
+  }
+  .avoro-newsletter-form .lumina-btn-gold {
+    width: 100% !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+  }
+
+  .avoro-checkout-topbar-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .avoro-checkout-steps {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+  .avoro-checkout-back {
+    display: none !important;
+  }
+
+  .avoro-footer-bottom {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left;
+  }
+
+  .lumina-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .avoro-section { padding-block: clamp(3rem, 8vw, 5rem); }
+  .avoro-section-sm { padding-block: clamp(2rem, 5vw, 3rem); }
+  .avoro-journal-grid { grid-template-columns: 1fr !important; }
+
+  .avoro-hero-grid {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 2rem;
+    padding-block: 1.25rem 2rem !important;
+  }
+  .avoro-hero-grid > *:last-child {
+    order: -1;
+  }
+
+  .avoro-hero-section {
+    min-height: clamp(540px, 86vh, 700px) !important;
+    background-image: url('/images/hero-mobile-bottles.webp') !important;
+    background-size: cover !important;
+    background-position: center top !important;
+    padding-top: 2.25rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .avoro-hero-overlay {
+    background: linear-gradient(180deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.35) 45%, transparent 80%) !important;
+  }
+
+  .avoro-hero-text-block {
+    text-align: center !important;
+    margin-inline: auto !important;
+    max-width: 100% !important;
+  }
+
+  .avoro-hero-buttons-wrapper {
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin-inline: auto !important;
+    gap: 0.75rem !important;
+  }
+
+  .avoro-hero-buttons-wrapper a {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding-block: 0.85rem !important;
+  }
+
+  .avoro-hero-title {
+    font-size: clamp(2.1rem, 9vw, 3.2rem) !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .avoro-hero-sub {
+    margin-inline: auto !important;
+    margin-bottom: 1.75rem !important;
+  }
+
+  .avoro-cta-stack {
+    justify-content: center;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Prevent fade-up animation from leaving overlap artifacts */
+  .avoro-hero-grid .fade-up,
+  .avoro-hero-grid .fade-up-2 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .lum-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .avoro-sig-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .avoro-sig-card {
+    min-height: auto !important;
+  }
+
+  .avoro-brand-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .col-product-card .col-card-img,
+  .home-product-card .home-card-img {
+    height: 260px !important;
+  }
+
+  .col-modern-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    gap: 1.15rem !important;
+    padding-bottom: 1.25rem !important;
+    padding-top: 0.25rem !important;
+    margin-inline: calc(var(--page-pad) * -1) !important;
+    padding-inline: var(--page-pad) !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    max-width: 100% !important;
+  }
+
+  .col-modern-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .col-modern-grid > * {
+    flex: 0 0 84% !important;
+    max-width: 320px !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    will-change: transform !important;
+  }
+
+  .pdp-hero {
+    min-height: auto !important;
+    padding-block: 0.5rem 1.5rem !important;
+  }
+  .pdp-hero-container {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+    padding-inline: 1rem !important;
+  }
+  .pdp-hero-gallery {
+    order: 1 !important;
+    width: 100% !important;
+  }
+  .pdp-hero-info {
+    order: 2 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  .pdp-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.6rem !important;
+    align-items: center !important;
+    margin-bottom: 0.85rem !important;
+  }
+  .pdp-actions > div:first-child {
+    flex-shrink: 0 !important;
+    width: 104px !important;
+    height: 48px !important;
+  }
+  .pdp-actions > button {
+    flex: 1 !important;
+    height: 48px !important;
+    padding: 0 0.85rem !important;
+    font-size: 0.74rem !important;
+  }
+  .pdp-trust-grid {
+    gap: 0.35rem !important;
+    margin-top: 1.25rem !important;
+    padding-top: 1.25rem !important;
+  }
+  .pdp-trust-item {
+    gap: 0.35rem !important;
+  }
+  .pdp-trust-icon {
+    width: 32px !important;
+    height: 32px !important;
+    flex-shrink: 0 !important;
+  }
+  .pdp-trust-title {
+    font-size: 0.68rem !important;
+  }
+  .pdp-trust-sub {
+    font-size: 0.58rem !important;
+  }
+  .pdp-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.35rem !important;
+  }
+
+  .avoro-filter-bar {
+    padding: 0.75rem 0.6rem !important;
+  }
+  .avoro-filter-chips {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    padding-bottom: 0.35rem !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .avoro-filter-chips button {
+    flex-shrink: 0 !important;
+    padding: 0.5rem 0.95rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .avoro-account-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .avoro-account-grid > div:first-child {
+    display: none !important;
+  }
+  .avoro-account-form-panel {
+    padding: 2rem 1.25rem !important;
+    min-height: auto !important;
+  }
+
+  .avoro-cart-drawer {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  .avoro-review-modal {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin: 1rem !important;
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+
+  .avoro-contact-form-card {
+    padding: 1.5rem !important;
+  }
+
+  .avoro-filter-bar {
+    padding: 0.85rem !important;
+    border-radius: 12px !important;
+  }
+
+  .avoro-filter-chips {
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.75rem !important;
+  }
+  .avoro-filter-chips button {
+    flex-shrink: 0;
+  }
+
+  .avoro-sig-card-img {
+    height: 220px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .avoro-parallax-card { max-height: 45dvh !important; }
+  .avoro-hero-section { min-height: auto !important; }
+}
+
+/* ── Main content alignment below fixed header ── */
+main {
+  padding-top: var(--header-offset);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite !important;
+}
+

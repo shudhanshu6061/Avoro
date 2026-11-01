@@ -1,0 +1,138 @@
+.footer {
+  width: 100%;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(200, 169, 107, 0.12);
+  padding-top: 4rem;
+  margin-top: auto;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 5rem;
+}
+
+.logo {
+  font-family: var(--font-primary);
+  font-size: 2rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.tagline {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--color-accent-gold);
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  max-width: 300px;
+}
+
+.heading {
+  font-family: var(--font-primary);
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.list {
+  list-style: none;
+}
+
+.list li {
+  margin-bottom: 0.75rem;
+}
+
+.list a {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  transition: color 0.3s;
+}
+
+.list a:hover {
+  color: var(--color-accent-gold);
+}
+
+.newsletterText {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 169, 107, 0.2);
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: #fff;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-accent-gold);
+  box-shadow: 0 0 20px rgba(200, 169, 107, 0.15);
+}
+
+.submitBtn {
+  background: rgba(200, 169, 107, 0.15);
+  border: 1px solid rgba(200, 169, 107, 0.4);
+  color: var(--color-accent-gold);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  transition: all 0.3s;
+}
+
+.submitBtn:hover {
+  background: rgba(200, 169, 107, 0.3);
+  box-shadow: 0 0 25px rgba(200, 169, 107, 0.25);
+}
+
+.bottomBar {
+  border-top: 1px solid rgba(200, 169, 107, 0.1);
+  padding: 1.5rem 0;
+}
+
+.copyright {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+@media (max-width: 992px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+
+  .form {
+    flex-direction: column;
+  }
+}

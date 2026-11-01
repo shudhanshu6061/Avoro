@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phone             String?
+  password          String
+  role              Role     @default(CUSTOMER)
+  twoFactorSecret   String?
+  twoFactorEnabled  Boolean  @default(false)
+  orders            Order[]
+  articles          Article[]
+  reviews           Review[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  SUPERADMIN
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String
+  notes       String[]
+  images      String[]
+  category    String
+  variants    Json     // Array of {size: string, price: number, stock: number, sku: string}
+  isFeatured  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  seo         Json?
+  pageContent Json?
+  orderItems  OrderItem[]
+  reviews     Review[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  orderNumber      String?     @unique  // e.g. AVO260717001 – immutable once set
+  userId           String?
+  user             User?       @relation(fields: [userId], references: [id])
+  guestEmail       String?
+  orderItems       OrderItem[]
+  shippingAddress  Json        // {fullName: string, address: string, city: string, postalCode: string, country: string}
+  paymentMethod    String
+  paymentResult    Json?       // {id: string, status: string, update_time: string, email_address: string}
+  itemsPrice       Float       @default(0.0)
+  taxPrice         Float       @default(0.0)
+  shippingPrice    Float       @default(0.0)
+  totalPrice       Float       @default(0.0)
+  isPaid           Boolean     @default(false)
+  paidAt           DateTime?
+  isDelivered      Boolean     @default(false)
+  deliveredAt      DateTime?
+  status           OrderStatus @default(PENDING)
+  // Shiprocket integration fields
+  shiprocketOrderId     String?
+  shiprocketShipmentId  String?
+  shiprocketAwbCode     String?
+  shiprocketCourierName String?
+  shiprocketTrackingUrl String?
+  shiprocketStatus      String?
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+// Atomic per-day counter for sequential order numbers
+model DailyOrderCounter {
+  date  String @id  // e.g. "260717" (YYMMDD)
+  count Int    @default(0)
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  size      String
+  quantity  Int
+  price     Float
+}
+
+// ─── Journal / CMS ───────────────────────────────────────────────
+
+model JournalCategory {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+  articles  Article[]
+  createdAt DateTime  @default(now())
+}
+
+model Article {
+  id              String           @id @default(uuid())
+  title           String
+  slug            String           @unique
+  body            String           // HTML from Tiptap
+  excerpt         String?
+  featuredImage   String?
+  categoryId      String?
+  category        JournalCategory? @relation(fields: [categoryId], references: [id])
+  authorId        String
+  author          User             @relation(fields: [authorId], references: [id])
+  status          ArticleStatus    @default(DRAFT)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  seo             Json?
+  seoTitle        String?
+  seoDescription  String?
+  seoKeyword      String?
+  ogImage         String?
+  views           Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+// ─── Discount Codes ──────────────────────────────────────────────
+
+model DiscountCode {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  description    String?
+  type           DiscountType @default(PERCENTAGE)
+  value          Float        // percent or flat amount
+  minOrderValue  Float?
+  maxUses        Int?
+  usedCount      Int          @default(0)
+  isActive       Boolean      @default(true)
+  startsAt       DateTime     @default(now())
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+// ─── Store Settings ──────────────────────────────────────────────
+
+model StoreSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String   // JSON string for complex values
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Customer Reviews (moderated) ────────────────────────────────
+
+model Review {
+  id          String   @id @default(uuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  // Guest submission support
+  guestName   String?
+  guestEmail  String?
+  rating      Int      // 1-5
+  title       String?
+  body        String   // main review text
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model Subscriber {
+  id          String           @id @default(uuid())
+  email       String           @unique
+  status      SubscriberStatus @default(ACTIVE)
+  source      String           @default("Footer Newsletter")
+  notes       String?
+  preferences Json?
+  segments    String[]         @default([])
+  metadata    Json?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+enum ContactMessageStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model ContactMessage {
+  id             String               @id @default(uuid())
+  name           String
+  email          String
+  subject        String
+  message        String
+  status         ContactMessageStatus @default(NEW)
+  source         String               @default("Website Contact Form")
+  
+  // Future ready fields
+  assignedToId   String?
+  internalNotes  String?
+  tags           String[]             @default([])
+  isSpam         Boolean              @default(false)
+  replyEmailSent Boolean              @default(false)
+
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
+
+

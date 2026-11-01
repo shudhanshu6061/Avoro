@@ -1,0 +1,53 @@
+/* Used by root layout — left slot reserves space for fixed 3D canvas */
+
+.cosmosSlot {
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+  pointer-events: none;
+}
+
+.contentPanel {
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+  padding: 2.5rem clamp(1.5rem, 4vw, 3rem) 3rem;
+  background: linear-gradient(
+    105deg,
+    rgba(10, 10, 10, 0.72) 0%,
+    rgba(10, 10, 10, 0.94) 28%,
+    rgba(10, 10, 10, 0.98) 100%
+  );
+  border-left: 1px solid rgba(200, 169, 107, 0.14);
+  overflow-y: auto;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contentPanelTop {
+  justify-content: flex-start;
+  padding-top: 2rem;
+}
+
+.contentInner {
+  width: 100%;
+  max-width: 520px;
+}
+
+.contentInnerWide {
+  max-width: 640px;
+}
+
+@media (max-width: 960px) {
+  .cosmosSlot {
+    min-height: 48vh;
+  }
+
+  .contentPanel {
+    min-height: auto;
+    justify-content: flex-start;
+    border-left: none;
+    border-top: 1px solid rgba(200, 169, 107, 0.12);
+    background: rgba(10, 10, 10, 0.98);
+  }
+}

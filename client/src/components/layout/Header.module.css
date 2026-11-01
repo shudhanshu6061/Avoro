@@ -1,0 +1,100 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-header);
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(200, 169, 107, 0.12);
+  padding: 1.25rem 0;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  font-family: var(--font-primary);
+  font-size: 1.75rem;
+  letter-spacing: 0.2em;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(200, 169, 107, 0.3);
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navLink {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  position: relative;
+}
+
+.navLink:hover,
+.navLink.active {
+  color: var(--color-accent-gold);
+  text-shadow: 0 0 20px rgba(200, 169, 107, 0.4);
+}
+
+.actions {
+  position: relative;
+}
+
+.cartBtn {
+  position: relative;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.5rem;
+  transition: color 0.3s;
+}
+
+.cartBtn:hover {
+  color: var(--color-accent-gold);
+}
+
+.moonOrbit {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-gold);
+  box-shadow: 0 0 10px var(--color-accent-gold);
+  animation: orbit 4s linear infinite;
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(14px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(14px) rotate(-360deg); }
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  background: var(--color-accent-gold);
+  color: #0a0a0a;
+  font-size: 0.6rem;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+}
